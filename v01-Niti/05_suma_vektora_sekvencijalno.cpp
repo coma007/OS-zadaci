@@ -7,3 +7,14 @@
  *
  * typedef vector<double>::const_iterator ci;
  */
+
+#include <iostream>
+#include <thread>
+
+using namespace std;
+
+typedef vector<double>::const_iterator ci;
+
+void f(ci begin, ci end, double& zbir) {
+	
+}
