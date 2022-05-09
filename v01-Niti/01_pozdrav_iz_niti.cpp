@@ -10,7 +10,7 @@ void stampa() {
 	cout << "Hello, world !" << endl;
 }
 
-int main() ;{
+int main() {
 	thread t(stampa);
 	t.join();
 	return 0;
