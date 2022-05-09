@@ -9,3 +9,35 @@
  * Na kraju programa iz mape ispisati id-eve niti u obrnutom redosledu rednog
  * broja niti.
  */
+
+#include <iostream>
+#include <thread>
+#include <map>
+
+using namespace std;
+
+
+typedef map<int, thread::id>::reverse_iterator rom; 
+int BROJ_NITI = 10;
+
+void f(int rbr, map<int, thread::id>& m) {
+	m[rbr] = this_thread::get_id();
+}
+
+int main() {
+	map<int, thread::id> ids;
+	for (int i =0; i != BROJ_NITI; i++) {
+		ids[i] = this_thread::get_id();
+	}
+	thread t[BROJ_NITI];
+	for (int i = 0; i != BROJ_NITI; i++) {
+		t[i] = thread(f, i, ref(ids));
+	}
+	for (int i = 0; i != BROJ_NITI; i++) {
+		t[i].join();
+	}
+	for (rom r = ids.rbegin(); r != ids.rend(); r++) {
+		cout << "ids[" << r->first << "] = " << r->second << endl;
+	}
+	return 0;
+}
