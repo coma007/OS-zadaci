@@ -7,3 +7,39 @@
  * Ukoliko je program ispravno napisan, na kraju programa vrednost brojaca mora
  * biti 0.
  */
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+using namespace std;
+
+int brojac = 0;
+int iteracije = 100000000;
+mutex m;
+
+void uvecaj() {
+	for (int i = 0; i < iteracije; i++) {
+ 		m.lock();
+		brojac++;
+		m.unlock();
+	}
+}
+
+void umanji() { 
+	for (int i = 0; i < iteracije; i++) {
+		m.lock();
+		brojac--;
+		m.unlock();
+	}
+}
+
+int main() {
+	thread t1(uvecaj);
+	thread t2(umanji);
+	t1.join(); t2.join();
+	cout << "Brojac: " << brojac;	
+}
+
+
+
