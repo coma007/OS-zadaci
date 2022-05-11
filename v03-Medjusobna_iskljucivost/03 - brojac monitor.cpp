@@ -19,3 +19,40 @@
  *
  * Na kraju programa ispisati konačnu vrednost brojača.
  */
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+using namespace std;
+
+int iters = 10000000;
+
+class brojac {
+public:
+	mutex m;
+	int val = 0;
+	void inc() {unique_lock<mutex> l(m); val++;}
+	void dec() {unique_lock<mutex> l(m); val--;}
+	friend ostream& operator<<(ostream& o, brojac& b) {
+		o << b.val;
+	}
+};
+
+void incT(brojac& b) {
+	for (int i = 0; i != iters; i++)
+	b.inc();
+}
+
+void decT(brojac& b) {
+	for (int i = 0; i != iters; i++)
+	b.dec();
+}
+
+int main() {
+	brojac b;
+	thread t1(incT, ref(b));
+	thread t2(decT, ref(b));
+	t1.join(); t2.join();
+	cout << b;
+}
