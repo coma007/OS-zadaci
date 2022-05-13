@@ -14,12 +14,31 @@
  * Pri ulasku, ukoliko su sva parking mesta zauzeta, automobil mora da saceka da
  * se neko parking mesto oslobodi.
  */
+#include <iostream>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
-class parking { 
+using namespace std;
+
+class parking {
+  private:
+	int br_mjesta;
+	int br_slobodnih;
+	mutex mx;
+	condition_variable cv;
   public:
-	parking(int N);
-	void udji();
-	void izadji();
+	parking(int N) : br_mjesta(N), br_slobodnih(N) {};
+	void udji() {
+		unique_lock<mutex> l(mx);
+		while (br_slobodnih == 0) cv.wait(l);
+		br_slobodnih--;
+	}
+	void izadji() {
+		unique_lock<mutex> l(mx);
+		br_slobodnih++;
+		cv.notify_one();
+	}
 };
 
 mutex m;
@@ -33,4 +52,18 @@ void automobil(parking& p) {
    { unique_lock<mutex> l(m);
       cout << "Automobil " << this_thread::get_id() << " izasao sa parkinga." << endl;
    }
+}
+
+int main() {
+	int KAPACITET = 5;
+	int BROJ_AUTOMOBILA = 10;
+	thread t[BROJ_AUTOMOBILA];
+	parking p(KAPACITET);
+	for (int i = 0; i < BROJ_AUTOMOBILA; i++) {
+		t[i] = thread(automobil, ref(p));
+	}
+	for (int i = 0; i < BROJ_AUTOMOBILA; i++) {
+		t[i].join();
+	}
+	
 }
