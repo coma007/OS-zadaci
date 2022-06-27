@@ -10,7 +10,7 @@ joinable prvo operacijom join a nakon toga detach.
 #include<thread>
 
 using namespace std;
-
+using namespace thread;
 void kod_niti() {               //Funkcija niti.
   int visina;
   cout << "Unesite vasu visinu u cm:" << endl;

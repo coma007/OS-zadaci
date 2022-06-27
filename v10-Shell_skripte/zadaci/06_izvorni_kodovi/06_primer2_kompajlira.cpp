@@ -5,7 +5,7 @@ u okviru nje ispisuje proizvoljnu recenicu*/
 #include<thread>
 
 using namespace std;
-
+using namespace thread;
 void kod_niti() {               //Funkcija niti.
    cout << "Pozdrav iz niti!" << endl;
 }

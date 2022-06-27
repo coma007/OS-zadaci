@@ -10,3 +10,16 @@
 
 
 # TODO implementirati
+
+echo "Unesite prvi broj" && read a
+echo "Unesite drugi broj" && read b
+
+if [ $a -gt $b ]
+	then echo "$a je vece od $b"
+elif [ $b -gt $a ]
+	then echo "$a je manje od $b"
+elif [ $a -eq $b ]
+	then echo "$a i $b su jednaki"
+else 
+	echo "Doslo je do greske"
+fi

@@ -17,3 +17,18 @@
 
 # TODO implementirati
 
+dir=$1
+if [[ -z $dir ]]; then echo "Nema radnog direktorijuma" 
+elif [[ ! -d $dir ]]; then echo "$dir nije direktorijum" ;
+elif [[ ! -r $dir ]] || [[ ! -w $dir ]]; then echo "Nemate prava pristupa"; 
+else
+	cd $dir
+	for file in $(ls -a *.cpp)
+	do
+		g++ $file -o $(basename $file .cpp) -pthread 1>&2 2>compile.log
+		success=$?
+		if [[ $success -eq 0 ]]; then echo "Kompajlirano: $file"
+		else echo "Greska: $file nije kompajlirana"
+		fi 
+	done
+fi

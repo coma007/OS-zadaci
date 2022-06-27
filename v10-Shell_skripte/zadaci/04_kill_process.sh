@@ -14,4 +14,22 @@
 
 
 # TODO implementirati
+signal=$1
+pid=$2
+
+case $signal in
+        STOP)
+        echo "Signal SIGSTOP"
+        kill -19 $pid ;;
+        KILL) 
+        echo "Signal SIGKILL" 
+        kill -9 $pid ;;
+        TERMINATE) 
+        echo "Signal SIGTERM"
+        kill -15 $pid ;;
+        CONTINUE) 
+        echo "Signal CONTINUE"
+        kill -18 $pid ;;
+        *) echo "Nepoznata naredba"
+esac
 

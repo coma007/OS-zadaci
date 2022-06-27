@@ -9,3 +9,10 @@
 
 
 # TODO implementirati
+
+echo "Broj argumenata: $#"
+
+for i in $@
+	do
+	echo $i
+	done

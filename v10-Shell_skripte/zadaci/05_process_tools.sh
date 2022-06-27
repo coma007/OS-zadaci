@@ -27,3 +27,35 @@
 
 
 # TODO implementirati  
+
+opt="${Z5_OPT}"
+cmdname="${Z5_CMDNAME}"
+
+case $opt in
+	1)
+	 ps
+	 ;;
+	2)
+	 ps -U $USER
+	 ;;
+	3)
+	 if [[ !  -z $cmdname ]] # provjera da li je uneseno ista
+	then
+	echo "Trazim PID za $cmdname"
+	ps -C $cmdname -o pid   1>/tmp/tempout # dobavljanje podataka i upis u datoteku
+	[[ $? -eq 0 ]] && echo "$(</tmp/tempout)" || echo "Nije pronadjen PID"
+	[[ -f /tmp/tempout ]] && rm /tmp/tempout 
+	else
+	echo "Nevazeca $cmdname komanda"
+       	fi
+	;;
+	*) echo "Nevazeca $opt komanda" ;;
+esac
+
+
+
+
+
+
+
+
