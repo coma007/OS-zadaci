@@ -19,3 +19,31 @@
  *
  * Pri ispisu nije vazan redosled parova.
  */
+#include <iostream>
+#include <map>
+#include <thread>
+
+using namespace std;
+
+void obrada(map<string, string> &z) {
+  string s = "{";
+  for (auto it = z.begin(); it != z.end(); it++)
+    s += "\"" + it->first + "\":\"" + it->second + "\",";
+  s[s.length() - 1] = '}';
+
+  cout << s << endl;
+}
+
+int main() {
+  map<string, string> zahtev;
+
+  zahtev["id"] = "1";
+  zahtev["ime"] = "Marko";
+  zahtev["prezime"] = "Markovic";
+  zahtev["email"] = "marko.markovic@gmail.com";
+
+  thread t(obrada, ref(zahtev));
+  t.join();
+
+  return 0;
+}

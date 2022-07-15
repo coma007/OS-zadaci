@@ -27,3 +27,36 @@
  *
  * U programu postoji samo jedna nit koja vrsi proveru solventnosti.
  */
+#include <iostream>
+#include <map>
+#include <thread>
+
+#define GRANICA_SOLVENTNOSTI 5000
+
+using namespace std;
+
+string solventnost[2] = {" je NESOLVENTAN", " je SOLVENTAN"};
+
+void provera_solventnosti(map<int, bool> &stanja, map<int, int> &racuni) {
+  for (auto it = stanja.begin(); it != stanja.end(); it++) { // prolazak kroz mapu trazenih racuna
+    if (racuni[it->first] < GRANICA_SOLVENTNOSTI)            // ukoliko je stanje racuna sa datim kljucem nedovoljno
+      it->second = false;                                    // u mapi stanja se postavlja bool na false
+    else
+      it->second = true; // u suprotnom se postavlja na true
+  }
+}
+
+int main() {
+  map<int, bool> stanja = {make_pair(0, false), make_pair(2, false), make_pair(4, false)};
+  map<int, int> racuni = {make_pair(0, 3000), make_pair(1, 6000), // brza inicijalizacija parova kljuc, vrednost
+                          make_pair(2, 10000), make_pair(3, 1000), make_pair(4, 5000)};
+
+  thread t(provera_solventnosti, ref(stanja), ref(racuni));
+  t.join();
+
+  for (auto it = stanja.begin(); it != stanja.end(); it++) { // ispis solventnosti za svaki od trazenih racuna
+    cout << "Racun br: " << it->first << solventnost[it->second] << endl;
+  }
+
+  return 0;
+}

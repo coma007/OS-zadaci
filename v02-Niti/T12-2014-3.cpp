@@ -11,3 +11,45 @@
  * Broj elemenata vektora ne mora biti deljiv sa 3. Elementi vektora su tipa 
  * double.
  */
+#include <iostream>
+#include <thread>
+#include <vector>
+
+using namespace std;
+
+typedef vector<double>::const_iterator vci;
+
+void izracunaj_sumu(vci pocetak, vci kraj, double &suma) {
+  suma = 0;
+  for (auto it = pocetak; it != kraj; it++) {
+    suma += *it;
+  }
+}
+
+int main() {
+  vector<double> v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  vector<double> sume(3);
+  double srednja = 0;
+  thread t[2];
+
+  vci pocetak = v.begin();
+  vci kraj = pocetak + v.size() / 3;
+  for (int i = 0; i < 2; i++) {
+    t[i] = thread(izracunaj_sumu, pocetak, kraj, ref(sume[i])); // 2 niti dobijaju odgovarjuce iteratore
+    pocetak += v.size() / 3;
+    kraj += v.size() / 3;
+  }
+  izracunaj_sumu(pocetak, v.end(), sume[2]); // nit main racuna KONKURENTNO svoju sumu sa druge dve niti
+
+  for (int i = 0; i < 2; i++) {
+    t[i].join();
+  }
+
+  for (int i = 0; i < sume.size(); i++) {
+    srednja += sume[i];
+  }
+
+  cout << "Srednja vrednost svih elemenata vektora je: " << srednja / v.size() << endl;
+
+  return 0;
+}

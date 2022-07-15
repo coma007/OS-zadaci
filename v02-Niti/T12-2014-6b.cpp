@@ -14,3 +14,40 @@
  *
  * Najvecu kruznicu u obimu 50.2655 iscrtala je nit broj 3.
  */
+#include <cmath>
+#include <iostream>
+#include <map>
+#include <thread>
+
+using namespace std;
+
+void f(map<int, double> &kruznice, int rbr) {
+  int r = rand() % 10 + 1;
+  kruznice[rbr] = 2 * r * M_PI;
+}
+
+int main() {
+  int n;
+  cout << "Unesite broj kruznica: ";
+  cin >> n;
+
+  map<int, double> kruznice;
+
+  thread *t = new thread[n];
+  for (int i = 0; i < n; i++)
+    t[i] = thread(f, ref(kruznice), i + 1);
+
+  for (int i = 0; i < n; i++)
+    t[i].join();
+
+  map<int, double>::iterator max_it;
+  max_it = kruznice.begin();
+
+  for (map<int, double>::iterator it = kruznice.begin(); it != kruznice.end(); it++)
+    if (it->second > max_it->second)
+      max_it = it;
+
+  cout << "Najvecu kruznicu u obimu: " << max_it->second << " iscrtala je nit " << max_it->first << endl;
+
+  return 0;
+}
