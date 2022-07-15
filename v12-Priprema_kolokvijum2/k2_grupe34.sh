@@ -40,3 +40,44 @@
 # Napomena 2: sort -o izlazna_datoteka ulazna_datoteka.
 # Napomena 3: uniq ulazna_datoteka izlazna_datoteka
 #
+
+if [[ -z "$K2_OPT" ]]
+then
+        read -p "K2_OPT=" K2_OPT
+fi
+if [[ -z "$K2_DIR" ]]
+then
+        read -p "K2_DIR=" K2_DIR
+fi
+if ! [[ -d "$K2_DIR" ]]
+then
+        echo "$K2_DIR nije direktorijum"
+        exit 1
+fi
+case "$K2_OPT" in
+generate)
+        cd $K2_DIR
+        for ((i=1; i<=100; i++))
+                do
+                shuf -n 100 /usr/share/dict/words > "words$i.lst"
+                done
+;;
+sort)
+        cd $K2_DIR
+        for dat in *.lst
+                do 
+		sort -o "$dat" "$dat"
+                done
+;;
+combine) cd $K2_DIR
+        for dat in  *.lst
+                do
+                cat $dat >> "aggr.lst"
+                done
+        sort -o "aggr.lst" "aggr.lst"
+        uniq "aggr.lst" "combined.lst":
+;;
+*) echo "Pogresan izbor"; exit 1
+esac
+
+
