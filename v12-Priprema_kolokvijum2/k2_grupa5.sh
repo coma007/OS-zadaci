@@ -33,3 +33,31 @@
 # upis u evidenciju, i ukoliko to nije slucaj, treba da obavesti
 # korisnika i prekine svoj rad.
 #
+
+while [[ -z "$K2_LOGFILE" ]]	
+	do 
+	read -p "K2_LOGFILE=" K2_LOGFILE
+	 done
+if ! [[ -w "$K2_LOGFILE" ]]; then echo "Nemate prava pisanja"
+elif ! [[ -r "$K2_LOGFILE" ]]; then echo "Nemate prava citanja"
+else 
+while [[ 0 -eq 0 ]] 
+do 
+	a=$((1+RANDOM % 10))
+	b=$((1+RANDOM % 10))
+	res=$(($a*$b))
+
+	c=0
+	read -p "$a*$b="  c
+	while [[ ($c -lt 0) || ($c -gt 100) ]]
+	do
+		read -p "Nepravilan unos. Ponovite: a*b=" c
+	done
+	cor="netacno"
+	if [[ $res -eq $c ]]; then cor="tacno"; fi;
+	echo $cor
+
+	echo "$a*$b=$c $cor" >> "$K2_LOGFILE"
+
+done
+fi
