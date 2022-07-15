@@ -27,3 +27,32 @@
  *
  *     Neuspesna prijava!
  */
+#include <iostream>
+#include <map>
+#include <thread>
+
+using namespace std;
+
+void login(string *s, map<string, string> &korisnici) {
+  if (s[0] == "login" && korisnici.find(s[1]) != korisnici.end() && korisnici[s[1]] == s[2])
+    cout << "Korisnik uspesno ulogovan";
+  else
+    cout << "Neispravno korisnicko ime ili lozinka!";
+}
+
+int main() {
+  map<string, string> korisnici;
+  korisnici["milan"] = "12345";
+  korisnici["marko"] = "xyz";
+  korisnici["admin"] = "4dm1n";
+
+  string s[3];
+  for (int i = 0; i < 3; i++) {
+    getline(cin, s[i]);
+  }
+
+  thread t(login, s, ref(korisnici));
+  t.join();
+
+  return 0;
+}

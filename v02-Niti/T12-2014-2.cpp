@@ -20,3 +20,31 @@
  *
  * U programu postoji samo jedna nit koja kreira evidenciju studenata.
  */
+#include <iostream>
+#include <map>
+#include <thread>
+#include <vector>
+
+using namespace std;
+
+void evidencija(vector<string> &indeksi, vector<string> &imena_prezimena, map<string, string> &spisak) {
+  for (int i = 0; i < indeksi.size(); i++) {
+    spisak[indeksi[i]] = imena_prezimena[i]; // kreiranje mape, novi element za svaki indeks
+  }
+}
+
+int main() {
+  vector<string> indeksi = {"RA 111/2012", "RA 222/2012", "RA 333/2012"};
+  vector<string> imena_prezimena = {"Petar Petrovic", "Stefan Stefanovic", "Milica Micic"};
+  map<string, string> spisak;
+
+  thread t(evidencija, ref(indeksi), ref(imena_prezimena), ref(spisak)); // sve po referecni da se ne bi kopirali veliki
+  t.join();                                                              // kontejneri i da bi se izmenila mapa
+
+  cout << "Formirana evidencija:" << endl;
+  for (auto it = spisak.begin(); it != spisak.end(); it++) {
+    cout << "Indeks: " << it->first << " Ime i prezime: " << it->second << endl;
+  }
+
+  return 0;
+}
